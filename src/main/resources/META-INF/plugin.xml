@@ -1,0 +1,67 @@
+<idea-plugin>
+    <id>io.github.ambalashov.structurizr-idea-plugin</id>
+
+    <name>Structurizr DSL Support</name>
+
+    <vendor email="a.m.balashov@gmail.com" url="https://github.com/ambalashov/structurizr-idea-plugin">Oleksandr Balashov</vendor>
+
+    <description><![CDATA[
+        The IntelliJ Structurizr DSL Plugin enables the use of the Structurizr DSL language for defining software architecture diagrams.
+        Plugin support next features:
+        <ul>
+            <li>Syntax highlighting</li>
+            <li>Identifier completion</li>
+            <li>Identifier find usage</li>
+            <li>Identifier rename</li>
+            <li>Annotate duplicate declaration</li>
+        </ul>
+        <br/>
+        For more information see <a href="https://c4model.com/">C4 model</a> and <a href="https://github.com/structurizr/dsl">Structurizr DSL</a>
+        ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="Structurizr File"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFileType"
+                fieldName="INSTANCE"
+                language="Structurizr"
+                extensions="dsl"/>
+        <lang.parserDefinition
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrSyntaxHighlighterFactory"/>
+        <lang.refactoringSupport
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrRefactoringSupportProvider"/>
+        <lang.findUsagesProvider
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFindUsagesProvider"/>
+        <lang.commenter
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrCommenter"/>
+        <completion.contributor
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrCompletionContributor"/>
+        <lang.foldingBuilder
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFoldingBuilder"/>
+        <codeStyleSettingsProvider
+                implementation="io.github.ambalashov.sturcturizr.StructurizrCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider
+                implementation="io.github.ambalashov.sturcturizr.StructurizrLanguageCodeStyleSettingsProvider"/>
+        <lang.formatter
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFormattingModelBuilder"/>
+        <documentationProvider
+                implementation="io.github.ambalashov.sturcturizr.StructurizrDocumentationProvider"/>
+        <annotator
+                language="Structurizr"
+                implementationClass="io.github.ambalashov.sturcturizr.StructurizrAnnotator"/>
+
+
+    </extensions>
+</idea-plugin>

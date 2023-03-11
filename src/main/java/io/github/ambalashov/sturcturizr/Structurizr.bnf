@@ -1,0 +1,215 @@
+{
+  parserClass="io.github.ambalashov.sturcturizr.parser.StructurizrParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Structurizr"
+  psiImplClassSuffix="Impl"
+  psiPackage="io.github.ambalahov.sturcturizr.psi"
+  psiImplPackage="io.github.ambalahov.sturcturizr.psi.impl"
+
+  elementTypeHolderClass="io.github.ambalashov.sturcturizr.psi.StructurizrTypes"
+  elementTypeClass="io.github.ambalashov.sturcturizr.psi.StructurizrElementType"
+  tokenTypeClass="io.github.ambalashov.sturcturizr.psi.StructurizrTokenType"
+
+  psiImplUtilClass="io.github.ambalashov.sturcturizr.psi.impl.StructurizrPsiImplUtil"
+
+  tokens=[
+    LB='{'
+    RB='}'
+    EQ='='
+    REL='->'
+    ASTERISK='*'
+    CRLF='regexp:[\n\r]'
+    WHITE_SPACE="regexp:[ \t\f]"
+    QUOTED_TEXT="regexp:\"[^\"]*\""
+    COMMENT="regexp:(//)+(.)*\n"
+    ID_TOKEN="regexp:[a-z][a-zA-Z0-9_]*"
+    FILE='regexp:[a-zA-Z][a-zA-Z0-9_\/]*(\.[a-zA-Z0-9_]+)*'
+    SHAPE_TYPE='regexp:Cylinder|Box'
+//    URL='regexp:^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$'
+  ]
+}
+
+structurizrFile ::= item_*
+
+private item_::= workspaceExpression
+  | person_expr
+  | software_system_expr
+  | relation_expr
+  | identifier
+  | COMMENT
+  | CRLF
+
+workspaceExpression ::= workspace [item_name] [description] '{'
+    (COMMENT | CRLF)*
+    identifiers_hierarchical?
+    (COMMENT | CRLF)*
+    modelExpr?
+    (COMMENT | CRLF)*
+    viewsExpr?
+    (COMMENT | CRLF)*
+ '}'
+
+identifiers_hierarchical ::= '!identifiers hierarchical'
+
+modelExpr ::= model '{'
+    ( model_properties
+    | software_system_expr
+    | relation_expr
+    | group_model_expr
+    | person_expr
+    | identifier_ref
+    | dsl_include
+    | COMMENT
+    | CRLF)*
+  '}'
+
+model_properties ::= properties '{'
+  (model_properties_item | COMMENT | CRLF )*
+  '}'
+
+model_properties_item ::= prop_key prop_value
+
+person_expr::=  identifier_decl person item_name [description] [tags] ('{'
+    (COMMENT)*
+  '}')? {pin = 3}
+
+
+
+software_system_expr::= [identifier '='] softwareSystem item_name [description] [tags] [('{'
+    (group_ss_expr
+    | container_expr
+    | relation_expr
+    | identifier_ref
+    | dsl_include
+    | COMMENT | CRLF)*
+  '}')]
+
+container_expr::= [identifier '='] container item_name [description] [technology] [tags]
+('{' (component_expr
+  | group_container_expr
+  | relation_expr
+  | identifier_ref
+  | dsl_include
+  | COMMENT | CRLF)* '}')?
+
+component_expr::= [identifier '='] component item_name [description] [technology] [tags]
+('{' (relation_expr
+  | identifier_ref
+  | dsl_include
+  | COMMENT | CRLF)* '}')?
+
+
+relation_expr::= [identifier '='] (relation_ [item_name] [description] [technology] [tags] ('{'
+    (COMMENT)*
+  '}')?)
+
+private relation_ ::= identifier_ref '->' identifier_ref {pin=2}
+
+group_model_expr ::=  identifier_decl group item_name ('{'
+  ( software_system_expr
+  | relation_expr
+  | group_ss_expr
+  | identifier_ref
+  | dsl_include
+  | COMMENT | CRLF)*
+'}')?
+
+group_ss_expr ::=  identifier_decl group item_name ('{'
+  (container_expr
+  | relation_expr
+  | group_ss_expr
+  | identifier_ref
+  | dsl_include
+  | COMMENT | CRLF)* '}')?
+
+group_container_expr ::=  identifier_decl group item_name ('{'
+    (component_expr
+    | relation_expr
+    | group_container_expr
+    | identifier_ref
+    | dsl_include
+    | COMMENT | CRLF)*
+  '}')?
+
+dsl_include ::= include_keyword (include_file)
+
+include_keyword ::= '!include'
+include_file ::= FILE {
+  mixin="io.github.ambalashov.sturcturizr.psi.impl.StructurizrIncludeFileMixin"
+//  implements=["com.intellij.model.psi.PsiSymbolReference"]
+}
+//include_url ::= URL
+
+viewsExpr ::= views ('{'
+    ( system_landscape_expr
+    | system_context_expr
+    | container_view_expr
+    | component_view_expr
+    | theme_expr
+    | styles_expr
+    | COMMENT | CRLF)*
+ '}')?
+
+system_landscape_expr ::= systemLandscape [key] [description] '{'
+  (view_item_)*
+'}'
+
+system_context_expr ::= systemContext identifier_ref [key] [description] '{'
+   (view_item_)*
+'}'
+
+container_view_expr ::= container identifier_ref [key] [description] '{'
+  (view_item_)*
+'}'
+
+component_view_expr ::= component identifier_ref [key] [description] '{'
+  (view_item_)*
+'}'
+
+theme_expr ::= 'theme' ('default')
+styles_expr ::= 'styles' '{' (style_item_)* '}'
+
+private style_item_ ::= element_expr
+
+element_expr ::= 'element' key ('{'
+  (COMMENT | CRLF | shape_expr)*
+'}')?
+
+shape_expr ::= 'shape' SHAPE_TYPE
+
+private view_item_ ::= include_expr | exclude_expr | title_expr | auto_layout_expr | COMMENT | CRLF
+
+title_expr ::= 'title' item_name
+include_expr ::= 'include' include_item_+
+exclude_expr ::= 'exclude' include_item_+
+auto_layout_expr ::= 'autoLayout'
+
+private include_item_ ::= '*' | identifier_ref | include_expression
+
+include_expression ::= QUOTED_TEXT
+
+item_name::=QUOTED_TEXT
+key::=QUOTED_TEXT
+description::=QUOTED_TEXT
+technology::=QUOTED_TEXT
+tags::=QUOTED_TEXT
+
+private identifier_decl ::= [identifier '='] {pin=2}
+
+identifier::=ID_TOKEN
+{
+  mixin="io.github.ambalashov.sturcturizr.psi.impl.StructurizrNamedElementImpl"
+  implements=["io.github.ambalashov.sturcturizr.psi.StructurizrNamedElement"]
+  methods=[getId getName setName getNameIdentifier]
+  pin=2
+}
+identifier_ref::=ID_TOKEN
+{
+  mixin="io.github.ambalahov.sturcturizr.psi.impl.StructurizrIdentifierRefMixin"
+  methods=[setName]
+}
+
+prop_key::=QUOTED_TEXT
+prop_value::=QUOTED_TEXT
