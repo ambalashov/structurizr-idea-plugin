@@ -24,44 +24,44 @@
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="Structurizr File"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFileType"
+                implementationClass="io.github.ambalashov.structurizr.StructurizrFileType"
                 fieldName="INSTANCE"
                 language="Structurizr"
                 extensions="dsl"/>
         <lang.parserDefinition
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrParserDefinition"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrParserDefinition"/>
         <lang.syntaxHighlighterFactory
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrSyntaxHighlighterFactory"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrSyntaxHighlighterFactory"/>
         <lang.refactoringSupport
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrRefactoringSupportProvider"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrRefactoringSupportProvider"/>
         <lang.findUsagesProvider
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFindUsagesProvider"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrFindUsagesProvider"/>
         <lang.commenter
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrCommenter"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrCommenter"/>
         <completion.contributor
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrCompletionContributor"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrCompletionContributor"/>
         <lang.foldingBuilder
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFoldingBuilder"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrFoldingBuilder"/>
         <codeStyleSettingsProvider
-                implementation="io.github.ambalashov.sturcturizr.StructurizrCodeStyleSettingsProvider"/>
+                implementation="io.github.ambalashov.structurizr.StructurizrCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider
-                implementation="io.github.ambalashov.sturcturizr.StructurizrLanguageCodeStyleSettingsProvider"/>
+                implementation="io.github.ambalashov.structurizr.StructurizrLanguageCodeStyleSettingsProvider"/>
         <lang.formatter
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrFormattingModelBuilder"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrFormattingModelBuilder"/>
         <documentationProvider
-                implementation="io.github.ambalashov.sturcturizr.StructurizrDocumentationProvider"/>
+                implementation="io.github.ambalashov.structurizr.StructurizrDocumentationProvider"/>
         <annotator
                 language="Structurizr"
-                implementationClass="io.github.ambalashov.sturcturizr.StructurizrAnnotator"/>
+                implementationClass="io.github.ambalashov.structurizr.StructurizrAnnotator"/>
 
-
+        <breadcrumbsInfoProvider implementation="io.github.ambalashov.structurizr.breadcrumbs.StructurizrBreadcrumbsProvider"/>
     </extensions>
 </idea-plugin>
